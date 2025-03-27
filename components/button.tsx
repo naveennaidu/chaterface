@@ -3,15 +3,17 @@ import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps {
-  href: string;
+  href?: string;
   children: ReactNode;
   className?: string;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
   size?: 'small' | 'medium' | 'large';
+  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  disabled?: boolean;
 }
 
-export default function Button({ href, children, className = '', icon, iconPosition = 'left', size = 'medium' }: ButtonProps) {
+export default function Button({ onClick, href, children, className = '', icon, iconPosition = 'left', size = 'medium', disabled = false }: ButtonProps) {
   const sizeClasses = {
     small: 'px-4 py-2 text-xs rounded-md',
     medium: 'px-4 py-2 text-sm',
@@ -20,10 +22,12 @@ export default function Button({ href, children, className = '', icon, iconPosit
 
   return (
     <Link
-      href={href}
+      href={href ?? ''}
+      onClick={disabled ? undefined : onClick}
       className={cn(
-        'inline-flex items-center justify-center font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-all hover:scale-105',
+        'inline-flex items-center justify-center font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-colors',
         sizeClasses[size],
+        disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
     >

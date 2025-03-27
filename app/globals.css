@@ -1,7 +1,8 @@
 @import "tailwindcss";
 @import "@radix-ui/colors/cyan.css";
 @import "@radix-ui/colors/slate.css";
-@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/sage-dark.css";
+@import "@radix-ui/colors/sky.css";
 @import "@radix-ui/colors/teal.css";
 @import "@radix-ui/colors/sage.css";
 
@@ -35,6 +36,19 @@
     --color-sage-11: var(--sage-11);
     --color-sage-12: var(--sage-12);
 
+    --color-sage-dark-1: var(--sage-dark-1);
+    --color-sage-dark-2: var(--sage-dark-2);
+    --color-sage-dark-3: var(--sage-dark-3);
+    --color-sage-dark-4: var(--sage-dark-4);
+    --color-sage-dark-5: var(--sage-dark-5);
+    --color-sage-dark-6: var(--sage-dark-6);
+    --color-sage-dark-7: var(--sage-dark-7);
+    --color-sage-dark-8: var(--sage-dark-8);
+    --color-sage-dark-9: var(--sage-dark-9);
+    --color-sage-dark-10: var(--sage-dark-10);
+    --color-sage-dark-11: var(--sage-dark-11);
+    --color-sage-dark-12: var(--sage-dark-12);
+
     --color-cyan-1: var(--cyan-1);
     --color-cyan-2: var(--cyan-2);
     --color-cyan-3: var(--cyan-3);
@@ -47,6 +61,21 @@
     --color-cyan-10: var(--cyan-10);
     --color-cyan-11: var(--cyan-11);
     --color-cyan-12: var(--cyan-12);
+
+    --color-sky-1: var(--sky-1);
+    --color-sky-2: var(--sky-2);
+    --color-sky-3: var(--sky-3);
+    --color-sky-4: var(--sky-4);
+    --color-sky-5: var(--sky-5);
+    --color-sky-6: var(--sky-6);
+    --color-sky-7: var(--sky-7);
+    --color-sky-8: var(--sky-8);
+    --color-sky-9: var(--sky-9);
+    --color-sky-10: var(--sky-10);
+    --color-sky-11: var(--sky-11);
+    --color-sky-12: var(--sky-12);
+
+
   
     --color-slate-1: var(--slate-1);
     --color-slate-2: var(--slate-2);
@@ -60,4 +89,8 @@
     --color-slate-10: var(--slate-10);
     --color-slate-11: var(--slate-11);
     --color-slate-12: var(--slate-12);
+}
+
+.better-shadow {
+  box-shadow: rgba(28, 40, 64, 0.04) 0px 0px 0px 1px, rgba(28, 40, 64, 0.12) 0px 4px 8px -4px, rgba(28, 40, 64, 0.16) 0px 4px 12px -2px;
 }

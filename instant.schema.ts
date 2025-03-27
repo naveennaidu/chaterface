@@ -11,8 +11,24 @@ const _schema = i.schema({
     $users: i.entity({
       email: i.string().unique().indexed(),
     }),
+    conversations: i.entity({
+      name: i.string(),
+      createdAt: i.date(),
+      sessionId: i.string().indexed(),
+    }),
+    messages: i.entity({
+      role: i.string(),
+      content: i.string(),
+      createdAt: i.date(),
+      model: i.string(),
+    }),
   },
-  links: {},
+  links: {
+    conversationMessages: {
+      forward: { on: "messages", has: "one", label: "conversation" },
+      reverse: { on: "conversations", has: "many", label: "messages" }
+    },
+  },
   rooms: {},
 });
 
