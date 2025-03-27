@@ -11,9 +11,10 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
   onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
   disabled?: boolean;
+  target?: string;
 }
 
-export default function Button({ onClick, href, children, className = '', icon, iconPosition = 'left', size = 'medium', disabled = false }: ButtonProps) {
+export default function Button({ onClick, href, children, className = '', icon, iconPosition = 'left', size = 'medium', disabled = false, target = '' }: ButtonProps) {
   const sizeClasses = {
     small: 'px-4 py-2 text-xs rounded-md',
     medium: 'px-4 py-2 text-sm',
@@ -23,6 +24,7 @@ export default function Button({ onClick, href, children, className = '', icon, 
   return (
     <Link
       href={href ?? ''}
+      target={target ?? '_blank'}
       onClick={disabled ? undefined : onClick}
       className={cn(
         'inline-flex items-center justify-center font-medium text-white bg-black rounded-lg hover:bg-gray-800 transition-colors',

@@ -1,17 +1,22 @@
+'use client';
+
 import Logo from "@/components/logo";
 import { Lora } from "next/font/google";
 import Button from "@/components/button";
 import HyperaideLogo from "@/components/misc/hyperaide-logo";
+import { useCreateConversation } from "./utils/conversation";
 
 const lora = Lora({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-import { Horse, Heart, Cube, GithubLogo, ArrowRight, ChatTeardropDots } from "@phosphor-icons/react/dist/ssr";
+import { Horse, Heart, Cube, GithubLogo, ArrowRight, ChatTeardropDots, Keyboard } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 export default function Home() {
+  const { createConversationAndRedirect } = useCreateConversation();
+
   return (
     <div className="flex flex-col h-screen divide-y divide-sage-4 w-full">
       <div className="w-full">
@@ -25,8 +30,8 @@ export default function Home() {
           </div>
 
           <div className="flex flex-row items-center gap-2">
-            <Button href="/" size="small" className="bg-sage-2 border border-sage-4 text-sage-12 hover:shadow-none hover:bg-sage-3 duration-300" icon={<GithubLogo size={16} weight="bold" />}>View on GitHub</Button>
-            <Button href="/" size="small" className="bg-sage-2 border border-sage-4 text-sage-12 hover:shadow-none hover:bg-sage-3 duration-300" icon={<ChatTeardropDots size={16} weight="bold" />}>Try it out</Button>
+            <Button href="https://github.com/hyperaide/chaterface" target="_blank" size="small" className="bg-sage-2 border border-sage-4 text-sage-12 hover:shadow-none hover:bg-sage-3 duration-300" icon={<GithubLogo size={16} weight="bold" />}>View on GitHub</Button>
+            <Button onClick={createConversationAndRedirect} size="small" className="bg-sage-2 border border-sage-4 text-sage-12 hover:shadow-none hover:bg-sage-3 duration-300" icon={<ChatTeardropDots size={16} weight="bold" />}>Try it out</Button>
           </div>
         </div>
       </div>
@@ -45,8 +50,8 @@ export default function Home() {
             <p className={`text-md text-sage-5 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
 
             <div className="flex flex-row items-center gap-2 mx-auto w-max mt-4">
-              <Button href="/" className="bg-sage-12/50 text-sage-2 hover:shadow-none hover:bg-sage-12 duration-300" icon={<GithubLogo size={16} weight="bold" />}>View on GitHub</Button>
-              <Button href="/" className="bg-sage-12 text-sage-2 hover:shadow-none hover:bg-sage-12/85 duration-300" icon={<ChatTeardropDots size={16} weight="bold" />}>Try it out</Button>
+              <Button href="https://github.com/hyperaide/chaterface" target="_blank" className="bg-sage-12/50 text-sage-2 hover:shadow-none hover:bg-sage-12 duration-300" icon={<GithubLogo size={16} weight="bold" />}>View on GitHub</Button>
+              <Button onClick={createConversationAndRedirect} className="bg-sage-12 text-sage-2 hover:shadow-none hover:bg-sage-12/85 duration-300" icon={<ChatTeardropDots size={16} weight="bold" />}>Try it out</Button>
             </div>
           </div>
         </div>
@@ -55,18 +60,21 @@ export default function Home() {
       <div className="w-full border-b border-sage-4">
         <div className="grid grid-cols-3 gap-4 border-x border-sage-4 max-w-7xl mx-auto divide-x divide-sage-4">
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <Keyboard size={24} className="text-purple-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Keyboard Shortcuts</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Keyboard shortcuts so you can move around the app quickly.</p>
           </div>
 
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <Cube size={24} className="text-green-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Multiple Providers and Models</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Chaterface supports multiple providers and models.</p>
           </div>
 
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <GithubLogo size={24} className="text-blue-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Open Source</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is open source and you can view the source code on GitHub.</p>
           </div>
         </div>
       </div>

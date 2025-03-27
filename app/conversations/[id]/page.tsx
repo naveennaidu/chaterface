@@ -4,7 +4,7 @@ import { useDatabase } from "@/app/providers/database-provider";
 import { useKey } from "@/app/providers/key-provider";
 import { AppSchema } from "@/instant.schema";
 import { InstaQLEntity } from "@instantdb/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { DateTime } from "luxon";
 import Button from "@/components/button";
 import { useParams } from "next/navigation";
@@ -27,6 +27,7 @@ export default function ConversationPage() {
     return 'openai/gpt-4o';
   });
   const [error, setError] = useState<string | null>(null);
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
 
   const { id: conversationId } = useParams();
   const { data } = db.useQuery({
@@ -49,6 +50,33 @@ export default function ConversationPage() {
       setConversation(data.conversations[0]);
     }
   }, [data]);
+
+  // Handle keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle shortcuts when not in a textarea or input
+      if (e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLInputElement) {
+        return;
+      }
+
+      // Focus message input with K
+      if (e.key === 'k') {
+        e.preventDefault();
+        messageInputRef.current?.focus();
+      }
+      
+      // Send message with Enter
+      if (e.key === 'Enter' && !e.shiftKey && !isStreaming) {
+        e.preventDefault();
+        if (content.trim()) {
+          createMessage(content);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [content, isStreaming]);
 
   const createMessage = async (content: string) => {
     setError(null);
@@ -136,13 +164,36 @@ export default function ConversationPage() {
       </div>
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-80">
         <div className="max-w-3xl mx-auto space-y-2">
-          {conversation?.messages && conversation?.messages.map((message: InstaQLEntity<AppSchema, "messages">) => (
-            <Message 
-              key={message.id} 
-              message={message} 
-              isStreaming={message.id === streamingMessageId}
-            />
-          ))}
+          {conversation?.messages && conversation?.messages.length > 0 ? (
+            conversation.messages.map((message: InstaQLEntity<AppSchema, "messages">) => (
+              <Message 
+                key={message.id} 
+                message={message} 
+                isStreaming={message.id === streamingMessageId}
+              />
+            ))
+          ) : (
+            <div className="flex flex-col items-center justify-center h-[60vh] text-center px-4">
+              <h2 className="text-xl font-medium text-sage-12">What's on your mind?</h2>
+              <p className="text-sage-11 mb-8 text-sm font-mono">Here are some ideas to get started:</p>
+              <div className="flex flex-wrap gap-2 w-full max-w-2xl items-center justify-center">
+                {[
+                  "What's your favorite book and why?",
+                  "Can you help me plan a weekend trip?",
+                  "What's a good recipe for dinner tonight?",
+                  "Tell me about an interesting historical event"
+                ].map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => createMessage(suggestion)}
+                    className="p-2 text-left text-sm rounded-lg border border-sage-3 hover:bg-sage-2 transition-colors text-sage-12"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
       
@@ -155,14 +206,23 @@ export default function ConversationPage() {
           )}
           <div className="flex flex-row">
             <textarea 
+              ref={messageInputRef}
               className="w-full bg-transparent outline-none p-4 text-sm resize-none min-h-[60px] max-h-[200px] text-sage-12 placeholder:text-sage-11" 
               placeholder={getPlaceholder()} 
               value={content} 
               onChange={(e) => setContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !isStreaming) {
+                  e.preventDefault();
+                  if (content.trim()) {
+                    createMessage(content);
+                  }
+                }
+              }}
               disabled={isStreaming || !providerKeys[currentProvider as keyof typeof providerKeys]}
             />
           </div>
-          <div className="flex flex-row p-2 pb-6 justify-between items-center border-t border-sage-3">
+          <div className="flex flex-row p-2 pb-2 justify-between items-center border-t border-sage-3">
             <div className="flex flex-col gap-4 flex-1">
               <div className="flex items-center gap-4">
                 <select
@@ -178,17 +238,6 @@ export default function ConversationPage() {
                   ))}
                 </select>
               </div>
-              <div className="flex flex-col gap-2">
-                {currentProvider === 'openai' && (
-                  <ApiKeyInput provider="openai" label="OpenAI API Key" />
-                )}
-                {currentProvider === 'anthropic' && (
-                  <ApiKeyInput provider="anthropic" label="Anthropic API Key" />
-                )}
-                {currentProvider === 'google' && (
-                  <ApiKeyInput provider="google" label="Google API Key" />
-                )}
-              </div>
             </div>
 
             <Button 
@@ -199,6 +248,18 @@ export default function ConversationPage() {
             >
               {isStreaming ? 'Streaming...' : 'Send'}
             </Button>
+          </div>
+
+          <div className="flex flex-col gap-2 border-t border-sage-3">
+            {currentProvider === 'openai' && (
+              <ApiKeyInput provider="openai" label="OpenAI API Key" />
+            )}
+            {currentProvider === 'anthropic' && (
+              <ApiKeyInput provider="anthropic" label="Anthropic API Key" />
+            )}
+            {currentProvider === 'google' && (
+              <ApiKeyInput provider="google" label="Google API Key" />
+            )}
           </div>
         </div>
       </div>

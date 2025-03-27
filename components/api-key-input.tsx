@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useKey } from '@/app/providers/key-provider';
-import Button from './button';
+import { PencilSimple, X } from '@phosphor-icons/react';
 
 interface ApiKeyInputProps {
   provider: 'openai' | 'anthropic' | 'google';
@@ -35,51 +35,47 @@ export default function ApiKeyInput({ provider, label }: ApiKeyInputProps) {
 
   if (providerKeys[provider] && !isEditing) {
     return (
-      <div className="flex items-center gap-2 text-sm text-sage-11">
-        <span>{label}: {providerKeys[provider]?.slice(0, 4)}...{providerKeys[provider]?.slice(-4)}</span>
-        <Button
-          size="small"
+      <div className="flex items-center gap-1 text-xs font-mono text-sage-11">
+        <span className="w-full p-2">{label}: {providerKeys[provider]?.slice(0, 4)}...{providerKeys[provider]?.slice(-4)}</span>
+        <PencilSimple
+          size={16}
+          weight="bold"
           onClick={handleChange}
-          className="text-xs"
-        >
-          Change
-        </Button>
-        <Button
-          size="small"
+          className="cursor-pointer text-sage-11 hover:text-sage-12 transition-colors"
+        />
+        <X
+          size={16}
+          weight="bold"
           onClick={handleClear}
-          className="text-xs text-red-500"
-        >
-          Clear
-        </Button>
+          className="cursor-pointer text-sage-11 hover:text-sage-12 transition-colors mr-2"
+        />
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <form onSubmit={handleSubmit} className="flex items-center gap-1 bg-red-2 p-2 rounded">
       <input
-        type="password"
+        type="text"
         value={inputKey}
         onChange={(e) => setInputKey(e.target.value)}
         placeholder={`Enter ${label}...`}
-        className="text-sm bg-sage-3 text-sage-12 border border-sage-4 rounded-md px-2 py-1 outline-none hover:bg-sage-4 transition-colors min-w-[200px]"
+        className="text-sm text-sage-12 w-full border-sage-4 p-2 outline-none hover:bg-sage-4 transition-colors min-w-[200px]"
         autoFocus
       />
-      <Button
-        size="small"
-        onClick={handleSubmit}
-        className="text-xs"
+      <button
+        type="submit"
+        className="text-xs border-0 bg-sage-3 h-full text-sage-12 hover:bg-sage-4 transition-colors px-2 py-1 rounded"
       >
         Save
-      </Button>
+      </button>
       {isEditing && providerKeys[provider] && (
-        <Button
-          size="small"
+        <X
+          size={16}
+          weight="bold"
           onClick={() => setIsEditing(false)}
-          className="text-xs"
-        >
-          Cancel
-        </Button>
+          className="cursor-pointer text-sage-11 hover:text-sage-12 transition-colors mr-2"
+        />
       )}
     </form>
   );

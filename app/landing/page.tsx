@@ -2,6 +2,7 @@ import Logo from "@/components/logo";
 import { Lora } from "next/font/google";
 import Button from "@/components/button";
 import HyperaideLogo from "@/components/misc/hyperaide-logo";
+import { Keyboard } from "@phosphor-icons/react/dist/ssr";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -55,18 +56,21 @@ export default function Home() {
       <div className="w-full border-b border-sage-4">
         <div className="grid grid-cols-3 gap-4 border-x border-sage-4 max-w-7xl mx-auto divide-x divide-sage-4">
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <Keyboard size={24} className="text-purple-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Keyboard Shortcuts</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Keyboard shortcuts so you can move around the app quickly.</p>
           </div>
 
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <Cube size={24} className="text-green-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Multiple Providers and Models</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Chaterface supports multiple providers and models via the Vercel AI SDK.</p>
           </div>
 
           <div className="flex flex-col w-full py-20 px-10">
-            <h3 className={`text-xl font-semibold text-sage-12 relative z-10`}>Your Interface to Intelligence</h3>
-            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <GithubLogo size={24} className="text-blue-500" />
+            <h3 className={`text-md font-medium text-sage-12 relative z-10`}>Open Source</h3>
+            <p className={`text-md text-sage-10 relative z-10`}>Chaterface is open source and you can view the source code on GitHub.</p>
           </div>
         </div>
       </div>

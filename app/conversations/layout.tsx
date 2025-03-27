@@ -5,11 +5,14 @@ import Logo from "@/components/logo";
 import { Plus } from "@phosphor-icons/react";
 import { useAuth } from "../providers/auth-provider";
 import { useDatabase } from "../providers/database-provider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { id } from "@instantdb/react";
 import { DateTime } from "luxon";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import hotkeys from 'hotkeys-js';
+import { useCreateConversation } from "../utils/conversation";
+
 interface Conversation {
   id: string;
   name: string;
@@ -27,6 +30,8 @@ export default function ConversationsLayout({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const router = useRouter();
   const pathname = usePathname();
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const { createConversationAndRedirect } = useCreateConversation();
 
   const conversationId = pathname.split('/').pop();
 
@@ -50,22 +55,28 @@ export default function ConversationsLayout({
     }
   }, [data]);
 
-  const createConversationAndRedirect = async () => {
-    const conversationId = id();
-    const conversation = await db.transact(db.tx.conversations[conversationId].update({
-      name: DateTime.now().toFormat('MMM d, yyyy, h:mm a'),
-      createdAt: DateTime.now().toISO(),
-      sessionId: sessionId ?? '',
-    }));
-    router.replace(`/conversations/${conversationId}`);
-  };
+  // Set up keyboard shortcuts
+  useEffect(() => {
+    // Create new conversation
+    hotkeys('n', (event) => {
+      // Only trigger if not in a textarea or input
+      if (!(event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement)) {
+        event.preventDefault();
+        createConversationAndRedirect();
+      }
+    });
+
+    // Clean up hotkeys on unmount
+    return () => {
+      hotkeys.unbind('n');
+    };
+  }, [createConversationAndRedirect]);
 
   return (
     <div className="flex flex-row h-dvh w-full overflow-hidden bg-sage-2">
       <div className="flex flex-col p-2 overflow-y-auto items-start w-full max-w-64">
         <Logo style="small" className="my-2"/>
         <Button onClick={createConversationAndRedirect} size="small" className=" mt-2 w-full bg-sage-1 text-sage-12 hover:shadow-none border border-sage-4 hover:bg-sage-3 duration-300" icon={<Plus size={16} weight="bold" />}>New Conversation</Button>
-
 
         <div className="gap-2 flex flex-col w-full mt-4">
           <div className="flex flex-row items-center justify-between gap-2">
