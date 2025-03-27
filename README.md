@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chaterface
+
+A modern chat application built with cutting-edge technologies.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fchaterface)
+
+## Tech Stack
+
+This project is built using:
+
+- [Next.js](https://nextjs.org/) - The React Framework for the Web
+- [InstantDB](https://www.instantdb.com/) - A modern Firebase alternative for real-time database
+- [Vercel AI SDK](https://sdk.vercel.ai/docs/introduction) - For building AI-powered applications
 
 ## Getting Started
 
@@ -22,12 +34,11 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Next.js Documentation](https://nextjs.org/docs)
+- [InstantDB Documentation](https://www.instantdb.com/docs)
+- [Vercel AI SDK Documentation](https://sdk.vercel.ai/docs)
 
 ## Deploy on Vercel
 
