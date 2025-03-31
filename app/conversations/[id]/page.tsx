@@ -11,7 +11,6 @@ import { useParams } from "next/navigation";
 import { id } from "@instantdb/react";
 import Message from "@/components/message";
 import generateResponse from "@/services/generate-response";
-import ApiKeyInput from "@/components/api-key-input";
 
 export default function ConversationPage() {
   const { db } = useDatabase();
@@ -85,11 +84,6 @@ export default function ConversationPage() {
     const provider = selectedModel.split('/')[0] as 'openai' | 'anthropic' | 'google';
     const apiKey = providerKeys[provider];
     
-    if (!apiKey) {
-      setError(`Please set your ${provider} API key first`);
-      return;
-    }
-
     // Create user message
     await db.transact(db.tx.messages[id()].update({
       content,
@@ -97,6 +91,17 @@ export default function ConversationPage() {
       role: "user",
       model: selectedModel
     }).link({conversation: conversationId as string}));
+
+    if (!apiKey) {
+      // Create warning message if no API key
+      await db.transact(db.tx.messages[id()].update({
+        content: `⚠️ No API key found for ${provider}. Please [set up your API key](/settings/keys) to continue the conversation.`,
+        createdAt: DateTime.now().toISO(),
+        role: "system",
+        model: selectedModel
+      }).link({conversation: conversationId as string}));
+      return;
+    }
 
     // Start streaming response
     setIsStreaming(true);
@@ -197,8 +202,8 @@ export default function ConversationPage() {
         </div>
       </div>
       
-      <div className="absolute bottom-0 border-t border-sage-3 w-full shadow-lg bg-sage-1">
-        <div className="backdrop-blur-sm max-w-3xl mx-auto border-x border-sage-3 overflow-hidden">
+      <div className="absolute bottom-0 border-t border-sage-3 w-full bg-sage-1">
+        <div className="max-w-3xl mx-auto border-x border-sage-3 overflow-hidden">
           {error && (
             <div className="px-4 py-2 text-sm text-red-500 bg-red-50 border-b border-red-100">
               {error}
@@ -208,7 +213,7 @@ export default function ConversationPage() {
             <textarea 
               ref={messageInputRef}
               className="w-full bg-transparent outline-none p-4 text-sm resize-none min-h-[60px] max-h-[200px] text-sage-12 placeholder:text-sage-11" 
-              placeholder={getPlaceholder()} 
+              placeholder="Type a message..." 
               value={content} 
               onChange={(e) => setContent(e.target.value)}
               onKeyDown={(e) => {
@@ -219,47 +224,33 @@ export default function ConversationPage() {
                   }
                 }
               }}
-              disabled={isStreaming || !providerKeys[currentProvider as keyof typeof providerKeys]}
+              disabled={isStreaming}
             />
           </div>
           <div className="flex flex-row p-2 pb-2 justify-between items-center border-t border-sage-3">
-            <div className="flex flex-col gap-4 flex-1">
-              <div className="flex items-center gap-4">
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="text-sm bg-sage-3 text-sage-12 border border-sage-4 rounded-md px-2 py-1 outline-none hover:bg-sage-4 transition-colors"
-                  disabled={isStreaming}
-                >
-                  {models.map(model => (
-                    <option key={model.id} value={model.id}>
-                      {model.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="flex items-center gap-4">
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                className="text-sm bg-sage-3 text-sage-12 border border-sage-4 rounded-md px-2 py-1 outline-none hover:bg-sage-4 transition-colors"
+                disabled={isStreaming}
+              >
+                {models.map(model => (
+                  <option key={model.id} value={model.id}>
+                    {model.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <Button 
               onClick={() => createMessage(content)} 
               size="small" 
-              className="ml-4 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-4 shadow-sm transition-colors"
-              disabled={isStreaming || !content.trim() || !providerKeys[currentProvider as keyof typeof providerKeys]}
+              className="bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-4 transition-colors"
+              disabled={isStreaming || !content.trim()}
             >
               {isStreaming ? 'Streaming...' : 'Send'}
             </Button>
-          </div>
-
-          <div className="flex flex-col gap-2 border-t border-sage-3">
-            {currentProvider === 'openai' && (
-              <ApiKeyInput provider="openai" label="OpenAI API Key" />
-            )}
-            {currentProvider === 'anthropic' && (
-              <ApiKeyInput provider="anthropic" label="Anthropic API Key" />
-            )}
-            {currentProvider === 'google' && (
-              <ApiKeyInput provider="google" label="Google API Key" />
-            )}
           </div>
         </div>
       </div>
