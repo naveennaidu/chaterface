@@ -12,6 +12,7 @@ import { id } from "@instantdb/react";
 import MessageComponent from "@/components/message";
 import { useChat, Message as VercelAIMessage } from '@ai-sdk/react';
 import { CoreMessage } from "ai";
+import ChatInput from "@/components/ChatInput";
 
 type DBMessage = InstaQLEntity<AppSchema, "messages">;
 
@@ -34,6 +35,7 @@ export default function ConversationPage() {
     conversations: {
       $: { where: { id: conversationId as string } },
       messages: {
+        $: { select: ['id', 'role', 'content', 'createdAt', 'model'] }
       }
     }
   });
@@ -215,6 +217,16 @@ export default function ConversationPage() {
      return '';
   }, [conversation?.createdAt]);
 
+  const dbMessageModels = useMemo(() => {
+    const map = new Map<string, string | null | undefined>();
+    conversationData?.conversations?.[0]?.messages?.forEach((m: DBMessage) => {
+      if (m.id) {
+        map.set(m.id, m.model);
+      }
+    });
+    return map;
+  }, [conversationData]);
+
   return (
     <div className="w-full h-full flex flex-col relative bg-sage-1">
       <div className="flex flex-row w-full px-6 py-4 border-b border-sage-3 backdrop-blur-sm sticky top-0 z-10 bg-sage-1/80">
@@ -228,19 +240,23 @@ export default function ConversationPage() {
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-80">
         <div className="max-w-3xl mx-auto space-y-2">
           {messages.length > 0 ? (
-            messages.map((message: VercelAIMessage) => (
-              <MessageComponent
-                key={message.id}
-                message={{
+            messages.map((message: VercelAIMessage) => {
+              const model = dbMessageModels.get(message.id) ?? selectedModel;
+
+              return (
+                <MessageComponent
+                  key={message.id}
+                  message={{
                     id: message.id,
                     role: message.role,
                     content: typeof message.content === 'string' ? message.content : JSON.stringify(message.content),
                     createdAt: message.createdAt?.toISOString() ?? DateTime.now().toISO(),
-                    model: selectedModel
-                }}
-                isStreaming={isLoading && message.role === 'assistant' && message.id === messages[messages.length - 1]?.id}
-              />
-            ))
+                    model: model
+                  }}
+                  isStreaming={isLoading && message.role === 'assistant' && message.id === messages[messages.length - 1]?.id}
+                />
+              );
+            })
           ) : !isLoading && (!conversationData || initialMessages.length === 0) ? (
             <div className="flex flex-col items-center justify-center h-[60vh] text-center px-4">
                <h2 className="text-xl font-medium text-sage-12">What's on your mind?</h2>
@@ -273,75 +289,26 @@ export default function ConversationPage() {
            )}
         </div>
       </div>
-      <div className="absolute bottom-0 border-t border-sage-3 w-full bg-sage-1">
-        <div className="max-w-3xl mx-auto border-x border-sage-3 overflow-hidden">
-          {error && (
-            <div className="px-4 py-2 text-sm text-red-500 bg-red-50 border-b border-red-100">
-              {error}
-            </div>
-          )}
-          <form ref={formRef} onSubmit={handleFormSubmit}>
-            <div className="flex flex-row p-2 pb-2 justify-between items-center border-t border-sage-3">
-              <div className="flex items-center gap-4">
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="text-sm bg-sage-3 text-sage-12 border border-sage-4 rounded-md px-2 py-1 outline-none hover:bg-sage-4 transition-colors"
-                  disabled={isLoading}
-                >
-                  {models.map(model => (
-                    <option key={model.id} value={model.id}>
-                      {model.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
 
-            {currentApiKey ? (
-              <>
-                <div className="flex flex-row border-t border-sage-3">
-                  <textarea
-                    ref={messageInputRef}
-                    className="w-full bg-transparent outline-none p-4 text-sm resize-none min-h-[60px] max-h-[200px] text-sage-12 placeholder:text-sage-11"
-                    placeholder={getPlaceholder()}
-                    value={input}
-                    onChange={handleInputChange}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
-                        e.preventDefault();
-                        handleFormSubmit(e);
-                      }
-                    }}
-                    disabled={isLoading}
-                    rows={1}
-                  />
-                </div>
-                <div className="flex flex-row p-2 pb-2 justify-end items-center border-t border-sage-3">
-                   <Button
-                    size="small"
-                    className="bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-4 transition-colors"
-                    disabled={isSendDisabled}
-                  >
-                     {isLoading ? (
-                       <span className="flex items-center gap-1">
-                         <svg className="animate-spin h-4 w-4 text-sage-11" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                         </svg>
-                         Streaming...
-                       </span>
-                     ) : 'Send'}
-                  </Button>
-                 </div>
-              </>
-            ) : (
-              <div className="p-4 text-center text-amber-700 bg-amber-50 border-t border-amber-200">
-                 ⚠️ No API key found for {selectedModel.split('/')[0]}. Please <a href="/settings/keys" className="underline font-medium hover:text-amber-800">set up your API key</a> or select a different model.
-              </div>
-            )}
-          </form>
-        </div>
+      {/* Chat Input Section */}
+      <div className="absolute bottom-8 w-1/2 inset-x-0 mx-auto overflow-hidden mt-20">
+        <ChatInput
+          input={input}
+          setInput={setInput}
+          onSubmit={(content) => {
+            const fakeEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
+            handleFormSubmit(fakeEvent);
+          }}
+          isLoading={isLoading}
+          error={error}
+          placeholder={getPlaceholder()}
+          selectedModel={selectedModel}
+          models={models}
+          onModelChange={setSelectedModel}
+          disabled={!currentApiKey}
+          loadingButtonText="Streaming..."
+          submitButtonText="Send"
+        />
       </div>
     </div>
   );

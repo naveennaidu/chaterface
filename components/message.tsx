@@ -74,11 +74,6 @@ export default function Message({ message, isStreaming = false }: MessageProps) 
             {message.content}
           </Markdown>
         </div>
-        {!isSystem && (
-           <p className={`text-xs mt-1 font-mono text-sage-10`}>
-            {isStreaming ? 'Streaming...' : DateTime.fromISO(message.createdAt as string).toFormat('h:mm a')}
-          </p>
-        )}
       </div>
     </div>
   );

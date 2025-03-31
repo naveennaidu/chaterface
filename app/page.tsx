@@ -12,6 +12,7 @@ import Logo from "@/components/logo";
 import { Lora } from "next/font/google";
 import IntroductionModal from "@/components/IntroductionModal";
 import { AnimatePresence } from "motion/react";
+import ChatInput from "@/components/ChatInput";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -122,7 +123,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col relative bg-sage-1">
+    <div className="w-full h-screen flex flex-col relative bg-sage-1 items-center justify-center">
       <AnimatePresence>
         {showIntroModal && (
           <IntroductionModal isOpen={showIntroModal} onClose={handleCloseModal} />
@@ -130,78 +131,29 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Placeholder for message area - could add suggestions or instructions */}
-      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-80 flex items-center justify-center">
+      <div className="overflow-y-auto px-4 pt-6 flex items-center justify-center">
          <div className="text-center">
              <h2 className="text-xl font-medium text-sage-12">What's on your mind?</h2>
-             <p className="text-sage-11 text-sm font-mono mt-1">Enter your first message below to start a conversation.</p>
+             <p className="text-sage-11 text-sm font-mono mt-1">Send a message to start a new conversation.</p>
          </div>
       </div>
 
       {/* Chat Input Section */}
-      <div className="absolute bottom-0 border-t border-sage-3 w-full shadow-lg bg-sage-1">
-        <div className="backdrop-blur-sm max-w-3xl mx-auto border-x border-sage-3 overflow-hidden">
-          {error && (
-            <div className="px-4 py-2 text-sm text-red-500 bg-red-50 border-b border-red-100">
-              {error}
-            </div>
-          )}
-          <div className="flex flex-row">
-            <textarea
-              ref={messageInputRef}
-              className="w-full bg-transparent outline-none p-4 text-sm resize-none min-h-[60px] max-h-[200px] text-sage-12 placeholder:text-sage-11"
-              placeholder={getPlaceholder()}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              disabled={isLoading || !providerKeys[currentProvider]}
-            />
-          </div>
-          <div className="flex flex-row p-2 pb-2 justify-between items-center border-t border-sage-3">
-            <div className="flex flex-col gap-4 flex-1">
-              <div className="flex items-center gap-4">
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="text-sm bg-sage-3 text-sage-12 border border-sage-4 rounded-md px-2 py-1 outline-none hover:bg-sage-4 transition-colors"
-                  disabled={isLoading}
-                >
-                  {models.map(model => (
-                    <option key={model.id} value={model.id}>
-                      {model.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <Button
-              onClick={handleSendMessage}
-              size="small"
-              className="ml-4 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-4 shadow-sm transition-colors"
-              disabled={isLoading || !content.trim() || !providerKeys[currentProvider]}
-            >
-              {isLoading ? 'Creating...' : 'Send'}
-            </Button>
-          </div>
-
-          <div className="flex flex-col gap-2 border-t border-sage-3">
-            {/* Conditionally render API Key inputs based on selected model's provider */}
-            {currentProvider === 'openai' && (
-              <ApiKeyInput provider="openai" label="OpenAI API Key" />
-            )}
-            {currentProvider === 'anthropic' && (
-              <ApiKeyInput provider="anthropic" label="Anthropic API Key" />
-            )}
-            {currentProvider === 'google' && (
-              <ApiKeyInput provider="google" label="Google API Key" />
-            )}
-          </div>
-        </div>
+      <div className="w-1/2 inset-x-0 mx-auto overflow-hidden mt-20">
+        <ChatInput
+          input={content}
+          setInput={setContent}
+          onSubmit={handleSendMessage}
+          isLoading={isLoading}
+          error={error}
+          placeholder={getPlaceholder()}
+          selectedModel={selectedModel}
+          models={models}
+          onModelChange={setSelectedModel}
+          disabled={!providerKeys[currentProvider]}
+          loadingButtonText="Creating..."
+          submitButtonText="Send"
+        />
       </div>
     </div>
   );
