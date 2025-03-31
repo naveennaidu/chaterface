@@ -10,9 +10,8 @@ import Button from "@/components/button";
 import ApiKeyInput from "@/components/api-key-input";
 import Logo from "@/components/logo";
 import { Lora } from "next/font/google";
-import HyperaideLogo from "@/components/misc/hyperaide-logo";
-import { GithubLogo, ChatTeardropDots, Gear } from "@phosphor-icons/react/dist/ssr";
-import Link from "next/link";
+import IntroductionModal from "@/components/IntroductionModal";
+import { AnimatePresence } from "motion/react";
 
 const lora = Lora({
   subsets: ["latin"],
@@ -47,9 +46,9 @@ export default function Home() {
   // Check localStorage on mount to decide if modal should show
   useEffect(() => {
     // Ensure localStorage is accessed only on the client side
-    // if (typeof window !== 'undefined' && localStorage.getItem('hasSeenIntroModal') !== 'true') {
+    if (typeof window !== 'undefined' && localStorage.getItem('hasSeenIntroModal') !== 'true') {
     // Temporarily always show modal for development
-    if (typeof window !== 'undefined') {
+    // if (typeof window !== 'undefined') {
       setShowIntroModal(true);
     }
     messageInputRef.current?.focus();
@@ -58,9 +57,9 @@ export default function Home() {
   const handleCloseModal = () => {
     setShowIntroModal(false);
     // Ensure localStorage is accessed only on the client side
-    // if (typeof window !== 'undefined') {
-    //    localStorage.setItem('hasSeenIntroModal', 'true');
-    // }
+    if (typeof window !== 'undefined') {
+       localStorage.setItem('hasSeenIntroModal', 'true');
+    }
   };
 
   const handleSendMessage = async () => {
@@ -124,80 +123,11 @@ export default function Home() {
 
   return (
     <div className="w-full h-screen flex flex-col relative bg-sage-1">
-
-      {/* Introduction Modal */}
-      {showIntroModal && (
-        <div className="fixed inset-0 bg-black/25 z-50 flex items-center justify-center p-4">
-          <div className="bg-sage-2 p-2 rounded-xl better-shadow max-w-xl w-full border border-sage-4">
-          <div
-          className="flex flex-col w-full relative overflow-hidden rounded-lg"
-          style={{
-            backgroundImage: "url('/hero-noise.png')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="w-full">
-            <div className="flex flex-row items-center w-full max-w-7xl mx-auto pt-8 pb-4 justify-between">
-              <div className="flex flex-row items-center w-max mx-auto gap-4">
-                <Logo color="white"/>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-40 px-4">
-            <h1 className={`${lora.className} text-2xl font-semibold text-sage-1 relative z-10`}>Your Interface to Intelligence</h1>
-            <p className={`text-sm text-sage-5 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
-
-            {/* <div className="flex flex-row items-center gap-2 mx-auto w-max mt-4">
-              <Button href="/" className="bg-sage-12/50 text-sage-2 hover:shadow-none hover:bg-sage-12 duration-300" icon={<GithubLogo size={16} weight="bold" />}>View on GitHub</Button>
-              <Button href="/" className="bg-sage-12 text-sage-2 hover:shadow-none hover:bg-sage-12/85 duration-300" icon={<ChatTeardropDots size={16} weight="bold" />}>Try it out</Button>
-            </div> */}
-          </div>
-            </div>
-
-          
-          {/* Feature Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 px-2 pb-2">
-            {/* Open Source Card */}
-            <div className="flex flex-col gap-1 bg-sage-3 border border-sage-4 p-3 rounded-lg">
-              <div className="flex items-center gap-2 mb-1">
-                 <GithubLogo size={18} weight="bold" className="text-sage-11"/>
-                <h3 className="text-base font-semibold text-sage-12">Open Source</h3>
-              </div>
-              <p className="text-sm text-sage-11">
-                Chaterface is fully open-source on GitHub. Feel free to inspect, modify, and contribute.
-              </p>
-              {/* <Button size="small" href="https://github.com/hyperaide/chaterface" className="mt-2 bg-sage-4 hover:bg-sage-5 text-sage-12 border border-sage-6" icon={<GithubLogo size={14} weight="bold" />}>View on GitHub</Button> */}
-            </div>
-
-            {/* Multi-Model Card */}
-            <div className="flex flex-col gap-1 bg-sage-3 border border-sage-4 p-3 rounded-lg">
-              <div className="flex items-center gap-2 mb-1">
-                 <ChatTeardropDots size={18} weight="bold" className="text-sage-11"/>
-                 <h3 className="text-base font-semibold text-sage-12">Unified Interface</h3>
-              </div>
-              <p className="text-sm text-sage-11">
-                Access leading models from OpenAI, Anthropic, and Google all in one consistent chat interface.
-              </p>
-            </div>
-
-            {/* Local Keys Card */}
-            <div className="flex flex-col gap-1 bg-sage-3 md:col-span-2 border border-sage-4 p-3 rounded-lg">
-              <div className="flex items-center gap-2 mb-1">
-                 <Gear size={18} weight="bold" className="text-sage-11"/>
-                 <h3 className="text-base font-semibold text-sage-12">Secure & Private</h3>
-              </div>
-              <p className="text-sm text-sage-11 mb-2">
-                Your API keys are stored securely only in your browser's local storage. No sign-up needed, no data leaves your machine.
-              </p>
-              <Button size="small" href="/settings/keys" className="mt-auto bg-sage-4 hover:bg-sage-5 text-sage-12 border border-sage-6 duration-100" icon={<Gear size={14} weight="bold" />}>Manage API Keys</Button>
-            </div>
-
-          </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {showIntroModal && (
+          <IntroductionModal isOpen={showIntroModal} onClose={handleCloseModal} />
+        )}
+      </AnimatePresence>
 
       {/* Placeholder for message area - could add suggestions or instructions */}
       <div className="flex-1 overflow-y-auto px-4 pt-6 pb-80 flex items-center justify-center">
