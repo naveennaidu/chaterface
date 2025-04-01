@@ -6,6 +6,8 @@ import { DatabaseProvider } from "../providers/database-provider";
 import { KeyProvider } from '../providers/key-provider';
 import AppLayout from "@/components/AppLayout";
 import { NewConversationProvider } from "../providers/new-conversation-provider";
+import { PostHogProvider } from "@/components/PostHogProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,15 +33,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-sage-1 font-sans`}
       >
-        <DatabaseProvider>
-          <KeyProvider>
-            <NewConversationProvider>
-              <AuthProvider>
-                <AppLayout>{children}</AppLayout>
-              </AuthProvider>
-            </NewConversationProvider>
-          </KeyProvider>
-        </DatabaseProvider>
+        <PostHogProvider>
+          <DatabaseProvider>
+            <KeyProvider>
+              <NewConversationProvider>
+                <AuthProvider>
+                  <AppLayout>{children}</AppLayout>
+                </AuthProvider>
+              </NewConversationProvider>
+            </KeyProvider>
+          </DatabaseProvider>
+        </PostHogProvider>
       </body>
     </html>
   );
