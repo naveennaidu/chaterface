@@ -36,7 +36,7 @@ export default function ConversationPage() {
 
   const { newConversationMessage, setNewConversationMessage, setNewConversationId, newConversationId } = useNewConversation();
 
-  const { messages, input, handleInputChange, append } = useChat({
+  const { messages, input, handleInputChange, append, setInput } = useChat({
     api: '/api/chat',
     headers: {
       'Authorization': `Bearer ${getProviderKey(selectedModel)}`
@@ -91,6 +91,8 @@ export default function ConversationPage() {
       console.error('No conversation ID available');
       return;
     }
+
+    setInput("");
     
     const newMessageId = newInstantId();
     
