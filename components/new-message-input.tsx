@@ -33,11 +33,8 @@ export default function NewMessageInput({
   }, [getProviderKey, selectedModel]);
 
   return (
-    <motion.div
+    <div
      className={`px-4 w-full py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white to-transparent via-50% via-white/80"}`}
-      initial={{ opacity: 0, y: 100 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2 }}
      >
       <AnimatePresence>
         {selectedModelHasNoKey && (
@@ -59,7 +56,11 @@ export default function NewMessageInput({
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="mx-auto max-w-xl bg-white shadow-xl border border-sage-3 rounded-xl 2-50">
+      <motion.div className="mx-auto max-w-xl bg-white shadow-xl border border-sage-3 rounded-xl 2-50"
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      >
         <form onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -96,7 +97,7 @@ export default function NewMessageInput({
             <p className="text-sm">Send Message</p>
           </button>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }

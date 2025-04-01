@@ -19,6 +19,14 @@ const rules = {
    *   bind: ["isOwner", "auth.id != null && auth.id == data.ownerId"],
    * },
    */
+  conversations: {
+    allow: {
+      view: "data.sessionId == ruleParams.sessionId",
+      create: "data.sessionId == ruleParams.sessionId",
+      update: "data.sessionId == ruleParams.sessionId",
+      delete: "data.sessionId == ruleParams.sessionId",
+    },
+  },
 } satisfies InstantRules;
 
 export default rules;

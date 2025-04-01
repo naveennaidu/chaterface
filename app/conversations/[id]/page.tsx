@@ -14,17 +14,20 @@ import NewMessageInput from "@/components/new-message-input";
 import { UIMessage } from "ai";
 import { useNewConversation } from "@/providers/new-conversation-provider";
 import { models } from "@/constants/models";
+import { useAuth } from "@/providers/auth-provider";
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
 type Message = InstaQLEntity<AppSchema, "messages">;
+import { useRouter } from "next/navigation";
 
 export default function ConversationPage() {
   const params = useParams();
   const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : undefined;
   const { db } = useDatabase();
   const { getProviderKey } = useKey();
+  const { sessionId } = useAuth();
   const [selectedModel, setSelectedModel] = useState<string>(models[0].id);
   const [messagesForChat, setMessagesForChat] = useState<UIMessage[]>([]);
-
+  const router = useRouter();
   const { isLoading, data, error } = db.useQuery({
     conversations: {
       $: {
@@ -32,7 +35,13 @@ export default function ConversationPage() {
       },
       messages: {}
     }
-  });
+  }, { ruleParams: { sessionId: sessionId ?? '' } });
+
+  useEffect(() => {
+    if(data && !data?.conversations[0]){
+      router.push('/');
+    }
+  }, [data]);
 
   const { newConversationMessage, setNewConversationMessage, setNewConversationId, newConversationId } = useNewConversation();
 

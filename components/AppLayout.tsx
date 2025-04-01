@@ -38,9 +38,9 @@ export default function AppLayout({
           sessionId: sessionId ?? '',
         },
         order: { createdAt: "desc" }
-      }
-    }
-  });
+      },
+    },
+  }, { ruleParams: { sessionId: sessionId ?? '' } });
 
   useEffect(() => {
     if (data?.conversations) {
