@@ -6,6 +6,7 @@
 @import "@radix-ui/colors/teal.css";
 @import "@radix-ui/colors/sage.css";
 @import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/amber.css";
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
@@ -103,6 +104,19 @@
     --color-slate-10: var(--slate-10);
     --color-slate-11: var(--slate-11);
     --color-slate-12: var(--slate-12);
+
+    --color-amber-1: var(--amber-1);
+    --color-amber-2: var(--amber-2);
+    --color-amber-3: var(--amber-3);
+    --color-amber-4: var(--amber-4);
+    --color-amber-5: var(--amber-5);
+    --color-amber-6: var(--amber-6);
+    --color-amber-7: var(--amber-7);
+    --color-amber-8: var(--amber-8);
+    --color-amber-9: var(--amber-9);
+    --color-amber-10: var(--amber-10);
+    --color-amber-11: var(--amber-11);
+    --color-amber-12: var(--amber-12);
 }
 
 .better-shadow {

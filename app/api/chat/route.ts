@@ -30,6 +30,8 @@ export async function POST(req: Request) {
 
     let result;
 
+    console.log("provider", provider);
+
     // Use the extracted apiKey
     switch (provider) {
       case 'openai':

@@ -12,6 +12,7 @@ interface KeyContextType {
   providerKeys: ProviderKeys;
   setProviderKey: (provider: keyof ProviderKeys, key: string) => void;
   clearProviderKey: (provider: keyof ProviderKeys) => void;
+  getProviderKey: (model: string) => string | null;
 }
 
 const KeyContext = createContext<KeyContextType | undefined>(undefined);
@@ -65,13 +66,18 @@ export function KeyProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const getProviderKey = (model: string) => {
+    const [provider, modelId] = model.split('/');
+    return localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${provider}`);
+  }
+
   // Don't render children until we've checked localStorage
   if (!isInitialized) {
     return null;
   }
 
   return (
-    <KeyContext.Provider value={{ providerKeys, setProviderKey, clearProviderKey }}>
+    <KeyContext.Provider value={{ providerKeys, setProviderKey, clearProviderKey, getProviderKey }}>
       {children}
     </KeyContext.Provider>
   );
