@@ -60,7 +60,7 @@ const IntroductionModal: React.FC<IntroductionModalProps> = ({ isOpen, onClose }
         >
           <div className="w-full">
             <div className="flex flex-row items-center w-full max-w-7xl mx-auto pt-8 pb-4 justify-between">
-              <div className="flex flex-row items-center w-max mx-auto gap-4">
+              <div className="flex flex-row items-center w-max mx-auto gap-4 dark">
                 <Logo color="white"/>
               </div>
             </div>
