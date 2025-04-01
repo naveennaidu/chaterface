@@ -43,7 +43,7 @@ const CodeBlock: Components['code'] = ({ node, inline, className, children, ...p
 
 export default function Message({ message }: { message: UIMessage }) {
 
-  const baseClass = "w-max max-w-2xl";
+  const baseClass = "w-max max-w-2xl text-sage-12";
   const userClass = "ml-auto";
   const aiClass = "mr-auto";
 

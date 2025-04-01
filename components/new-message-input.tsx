@@ -34,21 +34,21 @@ export default function NewMessageInput({
 
   return (
     <div
-     className={`px-4 w-full py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white to-transparent via-50% via-white/80"}`}
+     className={`px-4 w-full py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white dark:from-sage-2 to-transparent via-50% via-white/80 dark:via-sage-2/80"}`}
      >
       <AnimatePresence>
         {selectedModelHasNoKey && (
           <motion.div
-            className="mx-auto max-w-xl bg-amber-2 p-2 border border-amber-4 rounded-xl z-40 mb-2 flex-col flex gap-2"
+            className="mx-auto max-w-xl bg-amber-2 p-2 border border-amber-4 rounded-xl z-40 mb-2 flex-col gap-2 dark:bg-sage-2 dark:border-sage-4"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.1 }}
           exit={{ opacity: 0, y: 50 }}
         >
-          {/* <Warning size={18} weight="bold" className="text-amber-10 mt-1" /> */}
+          <Warning size={18} weight="bold" className="text-amber-10 mt-1" />
             <div className="flex flex-col gap-2">
-            <p className="text-amber-11 text-sm">Looks like you dont have an API key set for this provider. Please set an API key in the settings page.</p>
-            <Link href="/settings/keys" className="text-amber-12 text-sm w-max flex items-center gap-2 font-medium">
+            <p className="text-amber-11 dark:text-sage-12 mt-2 font-mono text-xs">Looks like you dont have an API key set for this provider. Please set an API key in the settings page.</p>
+            <Link href="/settings/keys" className="text-amber-12 dark:text-sage-12 text-sm w-max flex items-center gap-2 font-medium">
               Set Provider Keys
               <ArrowRight size={12} weight="bold" />
             </Link>
@@ -56,7 +56,7 @@ export default function NewMessageInput({
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div className="mx-auto max-w-xl bg-white shadow-xl border border-sage-3 rounded-xl 2-50"
+      <motion.div className="mx-auto max-w-xl bg-white dark:bg-sage-3 shadow-xl border border-sage-3 dark:border-sage-5 rounded-xl 2-50"
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -67,7 +67,7 @@ export default function NewMessageInput({
           createMessage(input);
         }} className="w-full">
           <input
-            className="w-full p-4 border-b border-sage-3 focus:outline-none focus:ring-0 resize-none text-sm"
+            className="w-full p-4 border-b border-sage-3 dark:border-sage-5 focus:outline-none focus:ring-0 resize-none text-sm placeholder:text-sage-10 text-sage-12"
             value={input}
             placeholder={selectedModelHasNoKey ? "Please set an API key in the settings page" : "Say something..."}
             onChange={handleInputChange}
@@ -76,7 +76,7 @@ export default function NewMessageInput({
         </form>
         <div className="flex justify-between items-center p-2">
           <select
-            className="text-sage-600 bg-sage-1 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-3 hover:bg-sage-2 transition-colors cursor-pointer" 
+            className="bg-sage-1 dark:bg-sage-3 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-3 dark:border-sage-5 hover:bg-sage-2 dark:hover:bg-sage-4 transition-colors cursor-pointer text-sage-10 dark:text-sage-11" 
             value={selectedModel}
             onChange={(e) => setSelectedModel(e.target.value)}
           >
@@ -85,7 +85,7 @@ export default function NewMessageInput({
             ))}
           </select>
           <button 
-            className="text-sage-600 ml-auto bg-sage-1 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-3 hover:bg-sage-2 transition-colors cursor-pointer" 
+            className="ml-auto bg-sage-1 dark:bg-sage-4 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-5 dark:border-sage-6 hover:bg-sage-2 dark:hover:bg-sage-5 transition-colors cursor-pointer text-sage-10 dark:text-sage-11" 
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();

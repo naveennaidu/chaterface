@@ -100,7 +100,7 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col relative bg-sage-1 items-center justify-center">
+    <div className="w-full h-screen flex flex-col relative items-center justify-center">
       <AnimatePresence>
         {showIntroModal && (
           <IntroductionModal isOpen={showIntroModal} onClose={handleCloseModal} />
