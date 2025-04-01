@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import Button from './button';
+import { models } from '@/constants/models';
 
 export interface Model {
   id: string;
@@ -15,7 +16,6 @@ interface ChatInputProps {
   error: string | null;
   placeholder?: string;
   selectedModel: string;
-  models: Model[];
   onModelChange: (model: string) => void;
   disabled?: boolean;
   submitButtonText?: string;
@@ -31,7 +31,6 @@ export default function ChatInput({
   error,
   placeholder = "Type a message...",
   selectedModel,
-  models,
   onModelChange,
   disabled = false,
   submitButtonText = "Send",

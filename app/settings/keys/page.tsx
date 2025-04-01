@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from 'next/image';
 import Button from "@/components/button";
 import { CheckCircle, XCircle, FloppyDisk, Trash } from "@phosphor-icons/react";
-import { useKey } from "@/app/providers/key-provider"; // Import useKey
+import { useKey } from "@/providers/key-provider"; // Import useKey
 
 export default function Keys() {
   const { providerKeys, setProviderKey, clearProviderKey } = useKey();

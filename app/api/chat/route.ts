@@ -3,9 +3,6 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 
-// Allow streaming responses up to 60 seconds
-export const maxDuration = 60;
-
 export async function POST(req: Request) {
   try {
     // Extract API key from Authorization header
@@ -19,11 +16,11 @@ export async function POST(req: Request) {
     const apiKey = authHeader.substring(7); // Remove "Bearer " prefix
 
     // Get messages, model, and conversationId from the body
-    const { messages, model, conversationId }: { messages: CoreMessage[], model: string, conversationId: string } = await req.json();
+    const { messages, model }: { messages: CoreMessage[], model: string } = await req.json();
 
     // Ensure required body data is present
-    if (!messages || !model || !conversationId) {
-      return new Response(JSON.stringify({ error: 'Missing required fields in body (messages, model, conversationId)' }), {
+    if (!messages || !model) {
+      return new Response(JSON.stringify({ error: 'Missing required fields in body (messages, model)' }), {
          status: 400,
          headers: { 'Content-Type': 'application/json' }
       });

@@ -3,8 +3,8 @@
 import Button from "@/components/button";
 import Logo from "@/components/logo";
 import { Plus, Gear } from "@phosphor-icons/react";
-import { useAuth } from "@/app/providers/auth-provider"; // Adjusted path
-import { useDatabase } from "@/app/providers/database-provider"; // Adjusted path
+import { useAuth } from "@/providers/auth-provider"; // Adjusted path
+import { useDatabase } from "@/providers/database-provider"; // Adjusted path
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";

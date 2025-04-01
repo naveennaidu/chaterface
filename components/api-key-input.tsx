@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useKey } from '@/app/providers/key-provider';
+import { useKey } from '@/providers/key-provider';
 import { PencilSimple, X } from '@phosphor-icons/react';
 
 interface ApiKeyInputProps {

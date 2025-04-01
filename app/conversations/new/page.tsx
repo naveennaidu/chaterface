@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuth } from "@/app/providers/auth-provider";
+import { useAuth } from "@/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useDatabase } from "@/app/providers/database-provider";
+import { useDatabase } from "@/providers/database-provider";
 import { id } from "@instantdb/react";
 import { DateTime } from "luxon";
 

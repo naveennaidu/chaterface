@@ -1,8 +1,8 @@
 import { id } from "@instantdb/react";
 import { DateTime } from "luxon";
 import { useRouter } from "next/navigation";
-import { useDatabase } from "../providers/database-provider";
-import { useAuth } from "../providers/auth-provider";
+import { useDatabase } from "../../providers/database-provider";
+import { useAuth } from "../../providers/auth-provider";
 
 export const useCreateConversation = () => {
   const { sessionId } = useAuth();

@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "./providers/auth-provider";
-import { DatabaseProvider } from "./providers/database-provider";
-import { KeyProvider } from './providers/key-provider';
+import { AuthProvider } from "../providers/auth-provider";
+import { DatabaseProvider } from "../providers/database-provider";
+import { KeyProvider } from '../providers/key-provider';
 import AppLayout from "@/components/AppLayout";
-
+import { NewConversationProvider } from "../providers/new-conversation-provider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,9 +33,11 @@ export default function RootLayout({
       >
         <DatabaseProvider>
           <KeyProvider>
-            <AuthProvider>
-              <AppLayout>{children}</AppLayout>
-            </AuthProvider>
+            <NewConversationProvider>
+              <AuthProvider>
+                <AppLayout>{children}</AppLayout>
+              </AuthProvider>
+            </NewConversationProvider>
           </KeyProvider>
         </DatabaseProvider>
       </body>
