@@ -79,7 +79,6 @@ export default function Home() {
   };
 
   async function createMessage(content: string) {
-    const generatedNewMessageId = id();
     const generatedNewConversationId = id();
 
     setNewConversationMessage(content);
@@ -91,23 +90,7 @@ export default function Home() {
       name: "New Conversation"
     }));
 
-    // // Create initial user message
-    // await db.transact(db.tx.messages[generatedNewMessageId].update({
-    //   content: content,
-    //   createdAt: DateTime.now().toISO(),
-    //   role: "user",
-    //   model: selectedModel ?? "openai/gpt-4o"
-    // }).link({ conversation: generatedNewConversationId}));
-
-    return generatedNewConversationId;
-  }
-
-  const handleNewMessage = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (input.trim()) {
-      const newConversationId = await createMessage(input);
-      router.push(`/conversations/${newConversationId}`);
-    }
+    router.push(`/conversations/${generatedNewConversationId}`);
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,34 +113,8 @@ export default function Home() {
          </div>
       </div>
 
-      <div
-      className="px-4 bg-gradient-to-t from-white to-transparent via-50% via-white/80 absolute bottom-0 w-full py-8"
-      >
-        <div className="mx-auto max-w-xl bg-white shadow-xl border border-sage-3 rounded-xl">
-          <form onSubmit={
-            async (e) => {
-              e.preventDefault();
-              handleNewMessage(e as any);
-            }
-          } className="w-full">
-            <input
-              className="w-full p-4 border-b border-sage-3 focus:outline-none focus:ring-0 resize-none text-sm"
-              value={input}
-              placeholder="Say something..."
-              onChange={handleInputChange}
-            />
-          </form>
-          <div className="flex justify-between items-center p-2">
-            <button 
-              className="text-sage-600 ml-auto bg-sage-1 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-3 hover:bg-sage-2 transition-colors cursor-pointer" 
-              onClick={handleNewMessage}
-            >
-              {/* <PaperPlaneTilt size={16} weight="fill" /> */}
-              <p className="text-sm">Send Message</p>
-            </button>
-          </div>
-        </div>
-      </div>
+      
+      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
     </div>
   );
 }

@@ -18,7 +18,6 @@
     "@phosphor-icons/react": "^2.1.7",
     "@radix-ui/colors": "^3.0.0",
     "@types/js-cookie": "^3.0.6",
-    "@types/react-syntax-highlighter": "^15.5.13",
     "ai": "^4.2.6",
     "clsx": "^2.1.1",
     "framer-motion": "^12.6.2",
@@ -40,6 +39,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
