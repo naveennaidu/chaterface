@@ -2,7 +2,7 @@
 
 import Button from "@/components/button";
 import Logo from "@/components/logo";
-import { Plus, Gear, MoonStars, Sun } from "@phosphor-icons/react";
+import { Plus, Gear, MoonStars, Sun, ArrowRight } from "@phosphor-icons/react";
 import { useAuth } from "@/providers/auth-provider"; // Adjusted path
 import { useDatabase } from "@/providers/database-provider"; // Adjusted path
 import { useEffect, useState } from "react";
@@ -145,6 +145,17 @@ export default function AppLayout({
               </Link>
             ))}
           </div>
+        </div>
+
+        <div className="flex flex-col w-full mt-auto gap-2 py-4">
+          <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group">
+            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">View Github Repo</p>
+            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
+          </Link>
+          <Link href="https://x.com/dqnamo" target="_blank" className="flex flex-row items-center gap-1 group">
+            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Made by @dqnamo</p>
+            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
+          </Link>
         </div>
       </div>
 
