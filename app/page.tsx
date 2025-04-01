@@ -16,7 +16,7 @@ import ChatInput from "@/components/ChatInput";
 import NewMessageInput from "@/components/new-message-input";
 import { useNewConversation } from "@/providers/new-conversation-provider";
 import { useChat } from "@ai-sdk/react";
-
+import { useAuth } from "@/providers/auth-provider";
 const lora = Lora({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -29,6 +29,7 @@ export default function Home() {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false); // Changed from isStreaming for clarity
   const [input, setInput] = useState<string>('');
+  const { sessionId } = useAuth();
   const [selectedModel, setSelectedModel] = useState(() => {
     // Default model selection logic based on available keys
     if (providerKeys.openai) return 'openai/gpt-4o';
@@ -87,7 +88,8 @@ export default function Home() {
     // create conversation
     await db.transact(db.tx.conversations[generatedNewConversationId].update({
       createdAt: DateTime.now().toISO(),
-      name: "New Conversation"
+      name: content.slice(0, 20).trim(),
+      sessionId: sessionId as string
     }));
 
     router.push(`/conversations/${generatedNewConversationId}`);
@@ -114,7 +116,7 @@ export default function Home() {
       </div>
 
       
-      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} onHomepage={true} />
     </div>
   );
 }

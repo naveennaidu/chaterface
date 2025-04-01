@@ -10,13 +10,15 @@ export default function NewMessageInput({
   handleInputChange, 
   createMessage,
   selectedModel,
-  setSelectedModel
+  setSelectedModel,
+  onHomepage,
 }: { 
   input: string, 
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void, 
   createMessage: (input: string) => void,
   selectedModel: string,
-  setSelectedModel: (model: string) => void
+  setSelectedModel: (model: string) => void,
+  onHomepage?: boolean
 }) {
 
   const { getProviderKey } = useKey();
@@ -32,7 +34,7 @@ export default function NewMessageInput({
 
   return (
     <motion.div
-     className="px-4 bg-gradient-to-t from-white to-transparent via-50% via-white/80 absolute bottom-0 w-full py-8"
+     className={`px-4 w-full py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white to-transparent via-50% via-white/80"}`}
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}

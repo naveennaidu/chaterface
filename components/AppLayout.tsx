@@ -37,7 +37,7 @@ export default function AppLayout({
         where: {
           sessionId: sessionId ?? '',
         },
-        orderBy: { createdAt: "desc" } // Order by creation date, newest first
+        order: { createdAt: "desc" }
       }
     }
   });

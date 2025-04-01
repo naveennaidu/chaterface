@@ -13,7 +13,7 @@ const _schema = i.schema({
     }),
     conversations: i.entity({
       name: i.string(),
-      createdAt: i.date(),
+      createdAt: i.date().indexed(),
       sessionId: i.string().indexed(),
     }),
     messages: i.entity({
