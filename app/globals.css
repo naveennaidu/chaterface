@@ -7,6 +7,7 @@
 @import "@radix-ui/colors/sage.css";
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/grass.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -119,6 +120,19 @@
     --color-amber-10: var(--amber-10);
     --color-amber-11: var(--amber-11);
     --color-amber-12: var(--amber-12);
+
+    --color-grass-1: var(--grass-1);
+    --color-grass-2: var(--grass-2);
+    --color-grass-3: var(--grass-3);
+    --color-grass-4: var(--grass-4);
+    --color-grass-5: var(--grass-5);
+    --color-grass-6: var(--grass-6);
+    --color-grass-7: var(--grass-7);
+    --color-grass-8: var(--grass-8);
+    --color-grass-9: var(--grass-9);
+    --color-grass-10: var(--grass-10);
+    --color-grass-11: var(--grass-11);
+    --color-grass-12: var(--grass-12);
 }
 
 .better-shadow {

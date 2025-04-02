@@ -27,6 +27,8 @@ export default function ConversationPage() {
   const { sessionId } = useAuth();
   const [selectedModel, setSelectedModel] = useState<string>(models[0].id);
   const [messagesForChat, setMessagesForChat] = useState<UIMessage[]>([]);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const { isLoading, data, error } = db.useQuery({
     conversations: {
@@ -45,7 +47,7 @@ export default function ConversationPage() {
 
   const { newConversationMessage, setNewConversationMessage, setNewConversationId, newConversationId } = useNewConversation();
 
-  const { messages, input, handleInputChange, append, setInput } = useChat({
+  const { messages, input, handleInputChange, append, setInput, status } = useChat({
     api: '/api/chat',
     headers: {
       'Authorization': `Bearer ${getProviderKey(selectedModel)}`
@@ -53,7 +55,12 @@ export default function ConversationPage() {
     body: {
       model: selectedModel
     },
+    onError: async (error) => {
+      setIsProcessing(false);
+      setErrorMessage(error.message);
+    },
     onFinish: async (message) => {
+      setIsProcessing(false);
       const aiMessageId = newInstantId();
       await db.transact(db.tx.messages[aiMessageId].update({
         content: message.content,
@@ -113,6 +120,9 @@ export default function ConversationPage() {
       model: selectedModel
     }).link({ conversation: id }));
 
+    setIsProcessing(true);
+    setErrorMessage(null);
+
     append({
       role: "user",
       content: content,
@@ -126,7 +136,7 @@ export default function ConversationPage() {
         <MessageList messages={messages} messagesOnDB={data?.conversations[0]?.messages ?? []} />
       </div>
 
-      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} isProcessing={isProcessing} errorMessage={errorMessage} />
     </div>
   );
 }
