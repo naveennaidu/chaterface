@@ -22,8 +22,8 @@ export default function NewMessageInput({
   selectedModel: string,
   setSelectedModel: (model: string) => void,
   onHomepage?: boolean,
-  isProcessing: boolean,
-  errorMessage: string | null
+  isProcessing?: boolean,
+  errorMessage?: string | null
 }) {
 
   const { getProviderKey } = useKey();
