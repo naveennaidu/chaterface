@@ -86,7 +86,7 @@ export default function Home() {
     setNewConversationId(generatedNewConversationId);
 
     // create conversation
-    await db.transact(db.tx.conversations[generatedNewConversationId].update({
+    await db.transact(db.tx.conversations[generatedNewConversationId].ruleParams({ sessionId }).update({
       createdAt: DateTime.now().toISO(),
       name: content.slice(0, 20).trim(),
       sessionId: sessionId as string

@@ -4,7 +4,7 @@ import { i, init } from "@instantdb/react";
 import { createContext, useContext, useEffect, useState } from 'react';
 import schema from "@/instant.schema";
 
-const APP_ID = "3a07cf35-1108-4db6-ae02-13010c4b1fad";
+const APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID as string;
 
 const db = init({ appId: APP_ID, schema });
 

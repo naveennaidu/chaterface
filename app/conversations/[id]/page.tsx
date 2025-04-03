@@ -62,7 +62,7 @@ export default function ConversationPage() {
     onFinish: async (message) => {
       setIsProcessing(false);
       const aiMessageId = newInstantId();
-      await db.transact(db.tx.messages[aiMessageId].update({
+      await db.transact(db.tx.messages[aiMessageId].ruleParams({ sessionId }).update({
         content: message.content,
         role: "assistant",
         createdAt: DateTime.now().toISO(),
@@ -81,7 +81,7 @@ export default function ConversationPage() {
     async function createInitialMessage(){
       if(data?.conversations[0]?.messages.length === 0 && newConversationMessage?.trim() && newConversationId === id){
 
-      await db.transact(db.tx.messages[newInstantId()].update({
+      await db.transact(db.tx.messages[newInstantId()].ruleParams({ sessionId }).update({
         content: newConversationMessage,
         role: "user",
         createdAt: DateTime.now().toISO(),
@@ -113,7 +113,7 @@ export default function ConversationPage() {
     const newMessageId = newInstantId();
     
     // Create user message
-    await db.transact(db.tx.messages[newMessageId].update({
+    await db.transact(db.tx.messages[newMessageId].ruleParams({ sessionId }).update({
       content: content,
       createdAt: DateTime.now().toISO(),
       role: "user",
