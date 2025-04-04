@@ -2,7 +2,7 @@
 
 import Button from "@/components/button";
 import Logo from "@/components/logo";
-import { Plus, Gear, MoonStars, Sun, ArrowRight } from "@phosphor-icons/react";
+import { Plus, Gear, MoonStars, Sun, ArrowRight, List, X } from "@phosphor-icons/react";
 import { useAuth } from "@/providers/auth-provider";
 import { useDatabase } from "@/providers/database-provider"; // Adjusted path
 import { useEffect, useState } from "react";
@@ -82,6 +82,7 @@ export default function AppLayout({
   // --- Theme State ---
   // Initialize theme, default to 'light'. We'll check cookie client-side.
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Effect to read theme from cookie on component mount (client-side only)
   useEffect(() => {
@@ -90,6 +91,13 @@ export default function AppLayout({
       setTheme(savedTheme);
     }
   }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Effect to auto-close sidebar on mobile when navigating to a conversation
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  }, [pathname]);
 
   // Function to toggle theme
   const toggleTheme = () => {
@@ -101,10 +109,53 @@ export default function AppLayout({
   // --- End Theme State ---
 
   return (
-    <div className={`flex flex-row h-dvh w-full overflow-hidden bg-sage-2 dark:bg-sage-1 ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className={`flex flex-col md:flex-row h-dvh w-full overflow-hidden bg-sage-2 dark:bg-sage-1 ${theme === 'dark' ? 'dark' : ''}`}>
+      {/* Mobile header */}
+      <div className="md:hidden flex items-center justify-between p-2 border-b border-sage-4 dark:border-sage-5 bg-sage-2 dark:bg-sage-1 z-10">
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 rounded-md hover:bg-sage-3 dark:hover:bg-sage-4"
+            aria-label="Toggle sidebar"
+          >
+            <List size={20} weight="bold" className="text-sage-11 dark:text-sage-11" />
+          </button>
+          <Logo style="small" className="ml-1" color={theme === 'dark' ? 'white' : 'black'} />
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md group transition-colors duration-300"
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          >
+            {theme === 'light' ? (
+              <MoonStars size={18} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
+            ) : (
+              <Sun size={18} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
+            )}
+          </button>
+          <Link href="/settings/keys" className="p-2 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md group transition-colors duration-300">
+            <Gear size={18} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/30 z-20"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className="flex flex-col p-2 overflow-y-auto items-start w-full max-w-64">
-        <div className="flex flex-row gap-2 mx-2 justify-between w-full items-center">
+      <div className={`
+        ${sidebarOpen ? 'fixed left-0 top-0 bottom-0 z-30 w-72' : 'hidden'} 
+        md:relative md:flex md:w-64 md:max-w-64 md:z-auto
+        flex-col p-2 overflow-y-auto items-start bg-sage-2 dark:bg-sage-1 h-full
+      `}>
+        {/* Sidebar header - desktop */}
+        <div className="hidden md:flex flex-row gap-2 mx-2 justify-between w-full items-center">
           <Logo style="small" className="my-2 ml-1" color={theme === 'dark' ? 'white' : 'black'}/>
           
           <div className="flex flex-row gap-1">
@@ -125,7 +176,30 @@ export default function AppLayout({
             </Link>
           </div>
         </div>
-        <Button onClick={createConversationAndRedirect} size="small" className="mt-2 w-full bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6" icon={<Plus size={16} weight="bold" />}>New Conversation</Button>
+        {/* Mobile sidebar header with close button */}
+        <div className="md:hidden flex items-center justify-between w-full mb-4 pt-2">
+          <Logo style="small" className="ml-1" color={theme === 'dark' ? 'white' : 'black'}/>
+          <button 
+            onClick={() => setSidebarOpen(false)} 
+            className="p-1 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md"
+          >
+            <X size={20} weight="bold" className="text-sage-11 dark:text-sage-11" />
+          </button>
+        </div>
+
+        <Button 
+          onClick={() => {
+            createConversationAndRedirect();
+            if (window.innerWidth < 768) {
+              setSidebarOpen(false);
+            }
+          }} 
+          size="small" 
+          className="mt-2 w-full bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6" 
+          icon={<Plus size={16} weight="bold" />}
+        >
+          New Conversation
+        </Button>
 
         {/* Conversation List */}
         <div className="gap-2 flex flex-col w-full mt-4 flex-1 overflow-y-auto">
@@ -138,8 +212,13 @@ export default function AppLayout({
               <Link
                 key={conv.id}
                 href={`/conversations/${conv.id}`}
-                className={`text-sm px-2 py-1 rounded-md hover:bg-sage-3 dark:hover:bg-sage-4 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-4 dark:bg-sage-5 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
+                className={`text-sm px-2 py-2 md:py-1 rounded-md hover:bg-sage-3 dark:hover:bg-sage-4 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-4 dark:bg-sage-5 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
                 title={conv.name}
+                onClick={() => {
+                  if (window.innerWidth < 768) {
+                    setSidebarOpen(false);
+                  }
+                }}
               >
                 {conv.name}
               </Link>
@@ -179,7 +258,7 @@ export default function AppLayout({
       </div>
 
       {/* Main Content Area */}
-      <div className="w-full bg-white dark:bg-sage-2 mx-2 my-2 rounded-lg overflow-hidden border border-sage-4 dark:border-sage-5">
+      <div className="w-full flex-1 bg-white dark:bg-sage-2 mx-2 my-2 rounded-lg overflow-hidden border border-sage-4 dark:border-sage-5">
         {children}
       </div>
     </div>

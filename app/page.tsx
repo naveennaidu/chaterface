@@ -111,7 +111,7 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col relative items-center justify-center">
+    <div className="w-full h-screen flex flex-col relative items-center justify-center px-2 sm:px-4">
       <AnimatePresence>
         {showIntroModal && (
           <IntroductionModal isOpen={showIntroModal} onClose={handleCloseModal} />
@@ -119,7 +119,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* Placeholder for message area - could add suggestions or instructions */}
-      <div className="overflow-y-auto px-4 pt-6 flex items-center justify-center">
+      <div className="overflow-y-auto px-2 sm:px-4 pt-6 flex items-center justify-center">
          <div className="text-center">
              <h2 className="text-xl font-medium text-sage-12">What's on your mind?</h2>
              <p className="text-sage-11 text-sm font-mono mt-1">Send a message to start a new conversation.</p>

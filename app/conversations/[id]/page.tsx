@@ -118,7 +118,7 @@ export default function ConversationPage() {
 
   return (
     <div className="flex flex-col w-full h-full mx-auto relative">
-      <div className="flex-1 overflow-y-auto pt-24 h-full">
+      <div className="flex-1 overflow-y-auto pt-16 sm:pt-24 h-full">
         <MessageList messages={messages} messagesOnDB={data?.messages ?? []} />
       </div>
 

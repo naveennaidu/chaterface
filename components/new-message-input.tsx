@@ -39,7 +39,7 @@ export default function NewMessageInput({
 
   return (
     <div
-     className={`px-4 w-full py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white dark:from-sage-2 to-transparent via-50% via-white/80 dark:via-sage-2/80"}`}
+     className={`px-2 sm:px-4 w-full py-4 sm:py-8 ${onHomepage ? "" : "absolute bottom-0 bg-gradient-to-t from-white dark:from-sage-2 to-transparent via-50% via-white/80 dark:via-sage-2/80"}`}
      >
       <AnimatePresence>
         {selectedModelHasNoKey && (
@@ -90,7 +90,7 @@ export default function NewMessageInput({
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div className="mx-auto max-w-xl bg-white dark:bg-sage-3 shadow-xl border border-sage-3 dark:border-sage-5 rounded-xl 2-50"
+      <motion.div className="mx-auto max-w-xl bg-white dark:bg-sage-3 shadow-xl border border-sage-3 dark:border-sage-5 rounded-xl z-50"
       initial={{ opacity: 0, y: 100 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -101,26 +101,26 @@ export default function NewMessageInput({
           createMessage(input);
         }} className="w-full">
           <input
-            className="w-full p-4 border-b border-sage-3 dark:border-sage-5 focus:outline-none focus:ring-0 resize-none text-sm placeholder:text-sage-10 text-sage-12"
+            className="w-full p-3 sm:p-4 border-b border-sage-3 dark:border-sage-5 focus:outline-none focus:ring-0 resize-none text-sm placeholder:text-sage-10 text-sage-12"
             value={input}
             placeholder={selectedModelHasNoKey ? "Please set an API key in the settings page" : "Say something..."}
             onChange={handleInputChange}
             disabled={selectedModelHasNoKey}
           />
         </form>
-        <div className="flex justify-between items-center p-2">
+        <div className="flex flex-col sm:flex-row justify-between items-center p-2 gap-2">
           <ModelSelector
             selectedModel={selectedModel}
             setSelectedModel={setSelectedModel}
           />
           <button 
-            className="ml-auto bg-sage-1 dark:bg-sage-4 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-sage-5 dark:border-sage-6 hover:bg-sage-2 dark:hover:bg-sage-5 transition-colors cursor-pointer text-sage-10 dark:text-sage-11" 
+            className="w-full sm:w-auto sm:ml-auto bg-sage-1 dark:bg-sage-4 px-3 py-2 sm:px-2 sm:py-1 text-sm flex items-center justify-center sm:justify-start gap-2 rounded-md border border-sage-5 dark:border-sage-6 hover:bg-sage-2 dark:hover:bg-sage-5 transition-colors cursor-pointer text-sage-10 dark:text-sage-11" 
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               createMessage(input);
             }}
-            disabled={selectedModelHasNoKey}
+            disabled={selectedModelHasNoKey || !input.trim()}
           >
             <PaperPlaneTilt size={16} weight="fill" />
             <p className="text-sm">Send Message</p>

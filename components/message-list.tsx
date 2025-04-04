@@ -11,15 +11,12 @@ type Message = InstaQLEntity<AppSchema, "messages">;
 export default function MessageList({ messages, messagesOnDB }: { messages: UIMessage[], messagesOnDB: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log("messagesOnDB", messagesOnDB);
-  console.log("messages", messages);
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messagesOnDB]);
 
   return (
-    <motion.div className="flex flex-col gap-4 w-full max-w-4xl mx-auto overflow-y-auto pb-40"
+    <motion.div className="flex flex-col gap-4 w-full max-w-4xl mx-auto overflow-y-auto pb-40 px-3 md:px-6"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.3 }}
