@@ -29,7 +29,7 @@ export default function Home() {
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false); // Changed from isStreaming for clarity
   const [input, setInput] = useState<string>('');
-  const { sessionId } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [selectedModel, setSelectedModel] = useState(() => {
     // Default model selection logic based on available keys
     if (providerKeys.openai) return 'openai/gpt-4o';
@@ -39,7 +39,7 @@ export default function Home() {
   });
   const [error, setError] = useState<string | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement>(null);
-  const [showIntroModal, setShowIntroModal] = useState(false); // State for modal visibility
+  const [showIntroModal, setShowIntroModal] = useState(false); // State for modal visibility but will be overridden for unauthenticated users
   const models = [
     { id: 'openai/gpt-4o', name: 'gpt-4o' },
     { id: 'openai/gpt-4o-mini', name: 'gpt-4o-mini' },
@@ -50,22 +50,33 @@ export default function Home() {
 
   const { newConversationMessage, setNewConversationMessage, setNewConversationId } = useNewConversation();
 
-  // Check localStorage on mount to decide if modal should show
+  // Effect to manage modal visibility based on authentication
   useEffect(() => {
-    // Ensure localStorage is accessed only on the client side
-    if (typeof window !== 'undefined' && localStorage.getItem('hasSeenIntroModal') !== 'true') {
-    // Temporarily always show modal for development
-    // if (typeof window !== 'undefined') {
+    // If not authenticated, always show the modal
+    if (!isAuthenticated) {
       setShowIntroModal(true);
+    } else {
+      // If authenticated but hasn't seen intro, check localStorage
+      if (typeof window !== 'undefined' && localStorage.getItem('hasSeenIntroModal') !== 'true') {
+        setShowIntroModal(true);
+      } else {
+        setShowIntroModal(false);
+      }
     }
     messageInputRef.current?.focus();
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [isAuthenticated]); // Re-run when authentication state changes
 
   const handleCloseModal = () => {
-    setShowIntroModal(false);
-    // Ensure localStorage is accessed only on the client side
-    if (typeof window !== 'undefined') {
-       localStorage.setItem('hasSeenIntroModal', 'true');
+    // Only allow closing if the user is authenticated
+    if (isAuthenticated) {
+      setShowIntroModal(false);
+      // Ensure localStorage is accessed only on the client side
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('hasSeenIntroModal', 'true');
+      }
+    } else {
+      // Display a message to the user that they need to authenticate
+      console.log('Please authenticate to continue');
     }
   };
 
@@ -86,10 +97,10 @@ export default function Home() {
     setNewConversationId(generatedNewConversationId);
 
     // create conversation
-    await db.transact(db.tx.conversations[generatedNewConversationId].ruleParams({ sessionId }).update({
+    await db.transact(db.tx.conversations[generatedNewConversationId].ruleParams({ userId: user?.id }).update({
       createdAt: DateTime.now().toISO(),
       name: content.slice(0, 20).trim(),
-      sessionId: sessionId as string
+      userId: user?.id
     }));
 
     router.push(`/conversations/${generatedNewConversationId}`);

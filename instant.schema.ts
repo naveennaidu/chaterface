@@ -14,7 +14,7 @@ const _schema = i.schema({
     conversations: i.entity({
       name: i.string(),
       createdAt: i.date().indexed(),
-      sessionId: i.string().indexed(),
+      userId: i.string().indexed(),
     }),
     messages: i.entity({
       role: i.string(),
