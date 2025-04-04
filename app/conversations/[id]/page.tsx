@@ -45,8 +45,6 @@ export default function ConversationPage() {
     }
   }, { ruleParams: { userId: user?.id ?? '' } });
 
-  console.log(data)
-
   useEffect(() => {
     if(data && !data?.conversations[0]){
       router.push('/');

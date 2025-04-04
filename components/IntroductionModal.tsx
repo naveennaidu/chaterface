@@ -200,7 +200,7 @@ const IntroductionModal: React.FC<IntroductionModalProps> = ({ isOpen, onClose }
           <div className="w-full space-y-4 p-4 bg-sage-3 rounded-lg border border-sage-4 flex flex-col items-center justify-center">
             <CheckCircle size={48} className="text-green-500" />
             <h3 className={`${lora.className} text-xl font-semibold text-sage-12`}>Success!</h3>
-            <p className="text-sm text-sage-11 text-center">You're now signed in. Welcome to Chaterface!</p>
+            <p className="text-sm text-sage-11 text-center">You're now signed in. Welcome to IchiGPT!</p>
           </div>
         );
     }
@@ -240,7 +240,7 @@ const IntroductionModal: React.FC<IntroductionModalProps> = ({ isOpen, onClose }
 
           <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-24 px-4">
             <h1 className={`${lora.className} text-2xl font-semibold text-sage-1 relative z-10`}>Your Interface to Intelligence</h1>
-            <p className={`text-sm text-sage-5 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+            <p className={`text-sm text-sage-5 relative z-10`}>IchiGPT is a chat interface for large language models based on the open source chaterface project.</p>
           </div>
         </div>
 
@@ -255,12 +255,11 @@ const IntroductionModal: React.FC<IntroductionModalProps> = ({ isOpen, onClose }
           <div className="flex flex-col gap-1 bg-sage-3 border border-sage-4 p-3 rounded-lg">
             <div className="flex items-center gap-2 mb-1">
                <GithubLogo size={18} weight="bold" className="text-green-500"/>
-              <h3 className="text-base font-semibold text-sage-12">Open Source</h3>
+              <h3 className="text-base font-semibold text-sage-12">Open Source Based</h3>
             </div>
             <p className="text-sm text-sage-11">
-              Chaterface is fully open-source on GitHub. Feel free to inspect, modify, and contribute.
+              IchiGPT is built on the open-source chaterface project, providing a powerful and customizable chat experience.
             </p>
-             <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="mt-2 bg-sage-4 hover:bg-sage-5 text-sage-12 border border-sage-6" icon={<GithubLogo size={14} weight="bold" />}>View on GitHub</Button>
           </div>
 
           {/* Multi-Model Card */}
