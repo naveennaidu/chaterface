@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from "@/providers/auth-provider";
+import { useAuth } from "@/lib/instant-client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDatabase } from "@/providers/database-provider";
@@ -8,21 +8,21 @@ import { id } from "@instantdb/react";
 import { DateTime } from "luxon";
 
 export default function NewConversation() {
-  const { sessionId } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const { db } = useDatabase();
   useEffect(() => {
-    if (sessionId) {
+    if (user?.id) {
       createConversation();
     }
-  }, [sessionId]);
+  }, [user?.id]);
 
   const createConversation = async () => {
     const conversationId = id();
-    const conversation = await db.transact(db.tx.conversations[conversationId].update({
+    const conversation = await db.transact(db.tx.conversations[conversationId].ruleParams({ userId: user?.id }).update({
       name: 'New Conversation',
       createdAt: DateTime.now().toISO(),
-      sessionId: sessionId ?? '',
+      userId: user?.id ?? '',
     }));
     router.replace(`/conversations/${conversationId}`);
   };

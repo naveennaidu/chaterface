@@ -3,7 +3,7 @@
 import Button from "@/components/button";
 import Logo from "@/components/logo";
 import { Plus, Gear, MoonStars, Sun, ArrowRight } from "@phosphor-icons/react";
-import { useAuth } from "@/providers/auth-provider"; // Adjusted path
+import { useAuth } from "@/providers/auth-provider";
 import { useDatabase } from "@/providers/database-provider"; // Adjusted path
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -35,7 +35,7 @@ export default function AppLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { sessionId } = useAuth();
+  const { user, signOut } = useAuth();
   const { db } = useDatabase();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const pathname = usePathname();
@@ -44,17 +44,17 @@ export default function AppLayout({
   // Determine the active conversation ID from the pathname
   const conversationId = pathname.startsWith('/conversations/') ? pathname.split('/').pop() : null;
 
-  // Fetch conversations associated with the current session
+  // Fetch conversations associated with the current user
   const { data } = db.useQuery({
     conversations: {
       $: {
         where: {
-          sessionId: sessionId ?? '',
+          userId: user?.id ?? '',
         },
         order: { createdAt: "desc" }
       },
     },
-  }, { ruleParams: { sessionId: sessionId ?? '' } });
+  }, { ruleParams: { userId: user?.id ?? '' } });
 
   useEffect(() => {
     if (data?.conversations) {
@@ -147,15 +147,34 @@ export default function AppLayout({
           </div>
         </div>
 
-        <div className="flex flex-col w-full mt-auto gap-2 py-4">
-          <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group">
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">View Github Repo</p>
-            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
-          </Link>
-          <Link href="https://x.com/dqnamo" target="_blank" className="flex flex-row items-center gap-1 group">
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Made by @dqnamo</p>
-            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
-          </Link>
+        <div className="flex flex-col w-full mt-auto gap-2 py-4 border-t border-sage-4 dark:border-sage-5">
+          {user ? (
+            <>
+              <div className="flex flex-row items-center gap-2 px-2 py-1">
+                <div className="w-6 h-6 rounded-full bg-sage-5 dark:bg-sage-6 flex items-center justify-center">
+                  <span className="text-xs font-medium text-sage-12 dark:text-sage-12">
+                    {user.email?.[0] || '?'}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-xs font-medium text-sage-12 dark:text-sage-12 line-clamp-1">
+                    {user.email || 'User'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => signOut()}
+                className="flex flex-row items-center gap-1 group mx-2 px-2 py-1 rounded-md hover:bg-sage-3 dark:hover:bg-sage-4 transition-colors duration-300"
+              >
+                <p className="text-xs font-medium text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300">Logout</p>
+                <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
+              </button>
+            </>
+          ) : (
+            <div className="flex flex-row items-center gap-1 px-2 py-1">
+              <p className="text-xs font-mono text-sage-11 dark:text-sage-11">Not logged in</p>
+            </div>
+          )}
         </div>
       </div>
 
