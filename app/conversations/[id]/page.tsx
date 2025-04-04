@@ -86,32 +86,6 @@ export default function ConversationPage() {
     })) ?? []
   });
 
-  useEffect(() => {
-    async function createInitialMessage(){
-      if(data?.messages.length === 0 && newConversationMessage?.trim() && newConversationId === id){
-
-      await db.transact(db.tx.messages[newInstantId()].ruleParams({ userId: user?.id }).update({
-        content: newConversationMessage,
-        role: "user",
-        createdAt: DateTime.now().toISO(),
-        model: selectedModel,
-        userId: user?.id
-      }).link({ conversation: newConversationId ?? "" }));
-
-      setNewConversationMessage("");
-      setNewConversationId("");
-
-      append({
-        role: "user",
-        content: newConversationMessage,
-          parts: []
-        });
-      }
-    }
-    createInitialMessage();
-  }, [data]);
-
-
   async function createMessage(content: string) {
     if (!id) {
       console.error('No conversation ID available');
@@ -123,13 +97,6 @@ export default function ConversationPage() {
     const newMessageId = newInstantId();
     
     // Create user message
-    await db.transact(db.tx.messages[newMessageId].ruleParams({ userId: user?.id }).update({
-      content: content,
-      createdAt: DateTime.now().toISO(),
-      role: "user",
-      model: selectedModel,
-      userId: user?.id
-    }).link({ conversation: id }));
 
     setIsProcessing(true);
     setErrorMessage(null);
@@ -139,6 +106,14 @@ export default function ConversationPage() {
       content: content,
       parts: []
     });
+
+    await db.transact(db.tx.messages[newMessageId].ruleParams({ userId: user?.id }).update({
+      content: content,
+      createdAt: DateTime.now().toISO(),
+      role: "user",
+      model: selectedModel,
+      userId: user?.id
+    }).link({ conversation: id }));
   }
 
   return (
