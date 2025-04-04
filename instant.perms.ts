@@ -13,10 +13,10 @@ const rules = {
   },
   messages: {
     allow: {
-      view: "data.ref('conversation.userId') == ruleParams.userId",
+      view: "data.userId == ruleParams.userId || data.ref('conversation.userId') == ruleParams.userId",
       create: "true",
-      update: "data.ref('conversation.userId') == ruleParams.userId",
-      delete: "data.ref('conversation.userId') == ruleParams.userId",
+      update: "data.userId == ruleParams.userId || data.ref('conversation.userId') == ruleParams.userId",
+      delete: "data.userId == ruleParams.userId || data.ref('conversation.userId') == ruleParams.userId",
     },
   },
   $files: {

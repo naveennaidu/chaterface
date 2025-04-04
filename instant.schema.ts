@@ -21,6 +21,7 @@ const _schema = i.schema({
       content: i.string(),
       createdAt: i.date(),
       model: i.string(),
+      userId: i.string().indexed(),
     }),
   },
   links: {
